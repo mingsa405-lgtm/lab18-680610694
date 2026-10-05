@@ -22,11 +22,37 @@ import enrollmentRouter_v3 from "./routes/enrollmentsRouters_v3.ts";
 const app = express();
 const port = process.env.PORT || 3000;
 
-// CORS middleware: อนุญาตให้ Frontend (Vite dev server คนละ origin) เรียก API ได้
-// ตั้งค่า origin ได้หลายค่าคั่นด้วย "," ผ่าน CORS_ORIGIN ใน .env
+// ดึงรายการ origins ที่อนุญาต, ตัดช่องว่าง และตัดเครื่องหมาย / ท้าย URL ออก
+const rawOrigins = process.env.CORS_ORIGIN || "http://localhost:5173";
+const allowedOrigins = rawOrigins
+  .split(",")
+  .map((origin) => origin.trim().replace(/\/$/, ""));
+
+// โดเมนที่อนุญาตเสมอ
+const defaultAllowed = [
+  "https://lab18-680610694-frontend.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:3000",
+];
+
+// CORS middleware (รองรับ Preflight ในตัว)
 app.use(
   cors({
-    origin: (process.env.CORS_ORIGIN || "http://localhost:5173").split(","),
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        allowedOrigins.includes("*") ||
+        allowedOrigins.includes(origin) ||
+        defaultAllowed.includes(origin)
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Not allowed by CORS: ${origin}`));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
@@ -35,7 +61,6 @@ app.use(express.json());
 
 // logger middleware
 app.use(morgan("dev"));
-// app.use(morgan("combined"));
 
 // JSON parser middleware
 app.use(invalidJsonMiddleware);
