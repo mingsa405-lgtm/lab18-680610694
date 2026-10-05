@@ -50,9 +50,9 @@ app.get("/me", (req: Request, res: Response) => {
     success: true,
     message: "Student Information",
     data: {
-      studentId: "600610999",
-      firstName: "Dome",
-      lastName: "Potikanond",
+      studentId: "680610694",
+      firstName: "ปัณณวัฒน์ ",
+      lastName: "วงษ์แก้วจันทร์",
       program: "CPE",
       section: "001",
     },

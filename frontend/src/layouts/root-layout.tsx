@@ -62,7 +62,7 @@ export default function RootLayout() {
           ระบบลงทะเบียนเรียน{" "}
           {role === "ADMIN"
             ? "ฝั่งผู้ดูแลระบบ"
-            : "ฝั่งนักศึกษา จัดทำโดย นศ. ชื่อ-สกุล student name รหัส นศ. student id"}
+            : "ฝั่งนักศึกษา จัดทำโดย นศ. ปัณณวัฒน์ วงษ์แก้วจันทร์ รหัส นศ. 680610694"}
         </footer>
       </SidebarInset>
     </SidebarProvider>
